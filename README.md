@@ -1,4 +1,4 @@
-# 🧠 CompanyAgent — 公司内部智能 Agent
+# 🧠 AEIS — Agent Execution & Intelligence System
 
 基于 **OpenAI SDK + Streamlit + Function Calling** 的企业级智能助手。上传数据、描述需求，自动分析并生成报告。
 

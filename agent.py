@@ -1706,8 +1706,8 @@ def _render_text_with_charts(text: str, charts: list):
 
 # ── 5. Streamlit UI ───────────────────────────────
 def main():
-    st.set_page_config(page_title="公司智能助手", page_icon="🤖", layout="wide")
-    st.title("🤖 公司智能助手")
+    st.set_page_config(page_title="AEIS", page_icon="🤖", layout="wide")
+    st.title("🤖 AEIS — Agent Execution & Intelligence System")
     st.caption("OpenAI SDK + Streamlit | 数据留在本地")
 
     # ── 会话持久化：从 SQLite 恢复对话 ──
