@@ -33,18 +33,47 @@
 
 ## 🏗️ 架构
 
-```
-用户输入 → Streamlit UI → Agent 循环 → 工具层
-                              │
-              ┌───────────────┼───────────────┐
-              ▼               ▼               ▼
-         excel_tool      file_tool      contract_tool
-         (数据分析)      (文件解析)      (合同审查)
-                              │
-                   ┌──────────┴──────────┐
-                   ▼                     ▼
-             dynamic_tool          user_skills
-             (运行时造工具)         (自定义角色)
+```mermaid
+graph TB
+    subgraph UI["🖥️ 用户界面"]
+        Web["Streamlit Web UI<br/>文件上传 · 技能选择 · 用量面板"]
+    end
+
+    subgraph Agent["🧠 Agent 引擎"]
+        Loop["Agent 循环<br/>run_agent()"]
+        Stream["真流式输出<br/>token 级别实时渲染"]
+        Retry["自动重试容错<br/>超时/限流 3 次递增重试"]
+        Track["Token 追踪<br/>成本实时可视化"]
+        Skill["Skill 路由器<br/>6 种内置 + 自定义<br/>关键词自动匹配"]
+    end
+
+    subgraph Tools["🔧 工具层"]
+        Excel["excel_tool<br/>透视 · 排名 · 异常检测<br/>图表 · 报表导出"]
+        File["file_tool<br/>PDF/Word/PPT/图片<br/>通用文件解析"]
+        Contract["contract_tool<br/>15 项快扫 + LLM 深审<br/>合同双层审查"]
+        Dynamic["dynamic_tool<br/>安全沙箱在线造函数<br/>pd/np/plt 内置"]
+        RAG["RAG 工具<br/>search_knowledge_base<br/>list_knowledge_base"]
+    end
+
+    subgraph Storage["💾 存储层"]
+        Session["session_store<br/>SQLite 会话持久化<br/>快照 · 滑动窗口压缩"]
+        Vector["rag_store<br/>ChromaDB 向量库<br/>文档切片 · 语义检索"]
+        USkill["user_skills_store<br/>JSON 自定义角色"]
+    end
+
+    subgraph LLM["🤖 LLM 调用"]
+        OpenAI["OpenAI SDK 兼容<br/>JSON 结构化输出<br/>Function Calling"]
+    end
+
+    Web --> Loop
+    Loop --> Stream & Retry & Track
+    Loop --> Skill
+    Skill --> Loop
+    Loop --> Tools
+    Tools --> OpenAI
+    Tools --> Storage
+    Session --> Loop
+    Vector --> RAG
 ```
 
 ![主界面](docs/screenshots/main_ui.png)
