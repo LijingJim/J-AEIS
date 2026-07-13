@@ -87,8 +87,8 @@ pip install -r requirements.txt
 | 变量 | 说明 | 默认值 |
 |------|------|--------|
 | `OPENAI_API_KEY` | LLM API 密钥 | — |
-| `OPENAI_BASE_URL` | API 地址 | `https://api.deepseek.com` |
-| `OPENAI_MODEL` | 模型名称 | `deepseek-v4-pro` |
+| `OPENAI_BASE_URL` | API 地址 | `your-api-url` |
+| `OPENAI_MODEL` | 模型名称 | `your-model` |
 
 ## 📄 License
 
@@ -110,8 +110,8 @@ streamlit run agent.py
 
 ```bash
 set OPENAI_API_KEY=your-key
-set OPENAI_BASE_URL=https://api.deepseek.com
-set OPENAI_MODEL=deepseek-chat
+set OPENAI_BASE_URL=your-api-url
+set OPENAI_MODEL=your-model
 ```
 
 ## 📁 项目结构
@@ -139,8 +139,8 @@ set OPENAI_MODEL=deepseek-chat
 | 变量 | 说明 | 默认值 |
 |------|------|--------|
 | `OPENAI_API_KEY` | LLM API 密钥 | — |
-| `OPENAI_BASE_URL` | API 地址 | `https://api.deepseek.com` |
-| `OPENAI_MODEL` | 模型名称 | `deepseek-chat` |
+| `OPENAI_BASE_URL` | API 地址 | `your-api-url` |
+| `OPENAI_MODEL` | 模型名称 | `your-model` |
 | `WECOM_CORP_ID` | 企业微信 CorpID | — |
 | `WECOM_AGENT_ID` | 企业微信 AgentID | — |
 | `WECOM_SECRET` | 企业微信 Secret | — |
