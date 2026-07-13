@@ -1,5 +1,5 @@
 # ── 文档资料（不上传，截图除外）──
-docs/
+docs/*
 !docs/screenshots/
 !docs/screenshots/*.png
 .history/
