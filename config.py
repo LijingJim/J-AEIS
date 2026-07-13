@@ -3,7 +3,7 @@ import os
 # LLM 配置（兼容 OpenAI 格式，DeepSeek/Moonshot/智谱等均可）
 API_KEY  = os.getenv("OPENAI_API_KEY",  "your-api-key-here")
 BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
-MODEL    = os.getenv("OPENAI_MODEL",    "deepseek-chat")
+MODEL    = os.getenv("OPENAI_MODEL",    "your-model")
 
 # Token 成本追踪（单位：美元/百万 token）
 # DeepSeek: https://api-docs.deepseek.com/quick_start/pricing

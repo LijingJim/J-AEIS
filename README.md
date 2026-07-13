@@ -47,6 +47,8 @@
              (运行时造工具)         (自定义角色)
 ```
 
+![主界面](docs/screenshots/main_ui.png)
+
 ## 📦 安装
 
 双击 `安装依赖.bat`（自动检测 Python → 安装依赖 → 配置引导），或手动：
@@ -91,6 +93,3 @@ pip install -r requirements.txt
 | `OPENAI_BASE_URL` | API 地址 | `your-api-url` |
 | `OPENAI_MODEL` | 模型名称 | `your-model` |
 
-## 📄 License
-
-内部项目 · 公司内部使用
