@@ -97,6 +97,8 @@ sequenceDiagram
     Code->>LLM: (最终) 文本回答 → 流式输出
 ```
 
+### 界面展示
+
 ![主界面](docs/screenshots/main_ui.png)
 
 ## 📦 安装
