@@ -84,19 +84,17 @@ graph TB
 sequenceDiagram
     participant Code as 你的代码
     participant LLM as LLM
-    participant Tools as Python 工具
 
-    loop 最多14轮
-        Code->>LLM: messages + TOOLS 菜单
-        LLM->>Code: tool_calls: [read_excel(nrows=50)]
-        Code->>Code: json.loads → 解析参数
-        Code->>Code: TOOL_REGISTRY 查表
-        Code->>Tools: read_excel(nrows=50)
-        Tools->>Code: "第1行: 销售额500万..."
-        Code->>LLM: role=tool, 喂回结果
-        Note over LLM: 分析结果，决定下一步
-        LLM->>Code: 文本回答（最终输出）
-    end
+    Code->>LLM: 发送 messages + TOOLS 菜单
+    LLM->>Code: 返回 tool_calls: [read_excel(nrows=50)]
+    Note over Code: json.loads 解析参数
+    Note over Code: TOOL_REGISTRY 查表
+    Note over Code: dispatch_tool 执行 → 拿结果
+    Code->>LLM: role=tool, 喂回工具结果
+    Note over LLM: 分析结果，决定下一步
+    LLM->>Code: 可能再调工具，或直接给答案
+    Note over Code: 循环，直到 LLM 不再调工具
+    Code->>LLM: (最终) 文本回答 → 流式输出
 ```
 
 ![主界面](docs/screenshots/main_ui.png)
