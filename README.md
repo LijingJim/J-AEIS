@@ -35,45 +35,68 @@
 
 ```mermaid
 graph TB
-    subgraph UI["🖥️ 用户界面"]
-        Web["Streamlit Web UI<br/>文件上传 · 技能选择 · 用量面板"]
-    end
+    UI["🖥️ Streamlit UI<br/>文件上传 · 技能选择 · 用量面板"]
+
+    UI --> Agent
 
     subgraph Agent["🧠 Agent 引擎"]
-        Loop["Agent 循环<br/>run_agent()"]
-        Stream["真流式输出<br/>token 级别实时渲染"]
-        Retry["自动重试容错<br/>超时/限流 3 次递增重试"]
-        Track["Token 追踪<br/>成本实时可视化"]
-        Skill["Skill 路由器<br/>6 种内置 + 自定义<br/>关键词自动匹配"]
+        direction TB
+        Loop["run_agent() 主循环"]
+        Stream["真流式输出"]
+        Retry["自动重试容错"]
+        Track["Token 追踪"]
+        Skill["Skill 路由器<br/>6 内置 + 自定义"]
+        Loop --- Stream
+        Loop --- Retry
+        Loop --- Track
+        Loop --- Skill
     end
+
+    Agent --> Tools
 
     subgraph Tools["🔧 工具层"]
-        Excel["excel_tool<br/>透视 · 排名 · 异常检测<br/>图表 · 报表导出"]
-        File["file_tool<br/>PDF/Word/PPT/图片<br/>通用文件解析"]
-        Contract["contract_tool<br/>15 项快扫 + LLM 深审<br/>合同双层审查"]
-        Dynamic["dynamic_tool<br/>安全沙箱在线造函数<br/>pd/np/plt 内置"]
-        RAG["RAG 工具<br/>search_knowledge_base<br/>list_knowledge_base"]
+        direction TB
+        Excel["excel_tool<br/>透视 · 排名 · 图表 · 导出"]
+        File["file_tool<br/>PDF/Word/PPT 解析"]
+        Contract["contract_tool<br/>15项快扫 + LLM深审"]
+        Dynamic["dynamic_tool<br/>安全沙箱在线造函数"]
+        RAG["RAG 工具<br/>语义检索 · 文档索引"]
     end
+
+    Tools --> LLM
+    Tools --> Storage
 
     subgraph Storage["💾 存储层"]
-        Session["session_store<br/>SQLite 会话持久化<br/>快照 · 滑动窗口压缩"]
-        Vector["rag_store<br/>ChromaDB 向量库<br/>文档切片 · 语义检索"]
-        USkill["user_skills_store<br/>JSON 自定义角色"]
+        direction LR
+        Session["session_store<br/>SQLite 持久化"]
+        Vector["rag_store<br/>ChromaDB 向量库"]
+        USkill["user_skills_store<br/>JSON 角色配置"]
     end
 
-    subgraph LLM["🤖 LLM 调用"]
-        OpenAI["OpenAI SDK 兼容<br/>JSON 结构化输出<br/>Function Calling"]
+    subgraph LLM["🤖 LLM 层"]
+        API["OpenAI SDK 兼容<br/>Function Calling · JSON 输出"]
     end
+```
 
-    Web --> Loop
-    Loop --> Stream & Retry & Track
-    Loop --> Skill
-    Skill --> Loop
-    Loop --> Tools
-    Tools --> OpenAI
-    Tools --> Storage
-    Session --> Loop
-    Vector --> RAG
+### Agent 循环（Function Calling 流程）
+
+```mermaid
+sequenceDiagram
+    participant Code as 你的代码
+    participant LLM as LLM
+    participant Tools as Python 工具
+
+    loop 最多14轮
+        Code->>LLM: messages + TOOLS 菜单
+        LLM->>Code: tool_calls: [read_excel(nrows=50)]
+        Code->>Code: json.loads → 解析参数
+        Code->>Code: TOOL_REGISTRY 查表
+        Code->>Tools: read_excel(nrows=50)
+        Tools->>Code: "第1行: 销售额500万..."
+        Code->>LLM: role=tool, 喂回结果
+        Note over LLM: 分析结果，决定下一步
+        LLM->>Code: 文本回答（最终输出）
+    end
 ```
 
 ![主界面](docs/screenshots/main_ui.png)
