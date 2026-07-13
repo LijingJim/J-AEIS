@@ -1,0 +1,48 @@
+# ── 文档资料（不上传）──
+docs/
+.history/
+
+# ── 运行时生成 ──
+sessions.db
+user_skills.json
+__pycache__/
+*.pyc
+
+# ── RAG 向量库（不上传，运行中自动生成）──
+chroma_db/
+
+# ── 生成的报告 ──
+report_*.docx
+report_*.pdf
+test_report.pdf
+*.docx
+*.pdf
+
+# ── 用户数据/测试文件 ──
+test_upload.xlsx
+简报工作表2603.xlsx
+*.zip
+测试/测试_*.xlsx
+测试/测试_*.pdf
+测试/测试_*.docx
+
+# ── 测试脚本 ──
+test_rag.py
+
+# ── LaTeX 编译产物 ──
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+
+# ── 环境 ──
+.env
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
