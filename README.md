@@ -74,19 +74,31 @@ graph TB
     end
 ```
 
-### Agent 循环
+### 分析工作流
 
 ```mermaid
 sequenceDiagram
-    participant C as 代码
+    participant U as 用户
+    participant A as Agent
+    participant T as 工具层
     participant L as LLM
 
-    C->>L: messages + TOOLS
-    L->>C: tool_calls: [read_excel(nrows=50)]
-    Note over C: 解析参数 → 查表 → 执行
-    C->>L: role=tool, 喂回结果
-    Note over L: 分析，决定下一步
-    L->>C: 最终回答（流式输出）
+    U->>A: 上传文件 + 提问
+    Note over A: 关键词匹配 → 激活 Skill
+    Note over A: 注入系统角色 + 分析规范
+
+    loop 取证阶段
+        A->>L: messages + TOOLS
+        L->>A: tool_calls
+        A->>T: 并行调度（最多8线程）
+        T->>A: 工具结果
+        A->>L: 喂回结果
+    end
+
+    Note over A: 证据 ≥ 2 → 进入写作
+    Note over A: 大纲规划 → 逐段扩写 → 排版校对
+    Note over A: 12 项自审查 → 修订
+    A->>U: 流式输出最终报告
 ```
 
 ### 界面展示
