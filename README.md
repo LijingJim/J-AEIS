@@ -35,66 +35,58 @@
 
 ```mermaid
 graph TB
-    UI["🖥️ Streamlit UI<br/>文件上传 · 技能选择 · 用量面板"]
+    UI["🖥️ Streamlit UI"]
 
     UI --> Agent
 
     subgraph Agent["🧠 Agent 引擎"]
         direction TB
-        Loop["run_agent() 主循环"]
-        Stream["真流式输出"]
-        Retry["自动重试容错"]
-        Track["Token 追踪"]
-        Skill["Skill 路由器<br/>6 内置 + 自定义"]
-        Loop --- Stream
-        Loop --- Retry
-        Loop --- Track
-        Loop --- Skill
+        Loop["主循环"]
+        Stream["流式输出"]
+        Retry["重试容错"]
+        Track["用量追踪"]
+        Skill["Skill 路由"]
+        Loop --- Stream & Retry & Track & Skill
     end
 
     Agent --> Tools
 
     subgraph Tools["🔧 工具层"]
         direction TB
-        Excel["excel_tool<br/>透视 · 排名 · 图表 · 导出"]
-        File["file_tool<br/>PDF/Word/PPT 解析"]
-        Contract["contract_tool<br/>15项快扫 + LLM深审"]
-        Dynamic["dynamic_tool<br/>安全沙箱在线造函数"]
-        RAG["RAG 工具<br/>语义检索 · 文档索引"]
+        Excel["数据分析"]
+        File["文件解析"]
+        Contract["合同审查"]
+        Dynamic["动态造工具"]
+        RAG["知识库检索"]
     end
 
     Tools --> LLM
     Tools --> Storage
 
-    subgraph Storage["💾 存储层"]
-        direction LR
-        Session["session_store<br/>SQLite 持久化"]
-        Vector["rag_store<br/>ChromaDB 向量库"]
-        USkill["user_skills_store<br/>JSON 角色配置"]
+    subgraph Storage["💾 存储"]
+        Session["SQLite 会话"]
+        Vector["ChromaDB 向量"]
+        USkill["JSON 角色"]
     end
 
-    subgraph LLM["🤖 LLM 层"]
-        API["OpenAI SDK 兼容<br/>Function Calling · JSON 输出"]
+    subgraph LLM["🤖 LLM"]
+        API["OpenAI SDK<br/>Function Calling"]
     end
 ```
 
-### Agent 循环（Function Calling 流程）
+### Agent 循环
 
 ```mermaid
 sequenceDiagram
-    participant Code as 你的代码
-    participant LLM as LLM
+    participant C as 代码
+    participant L as LLM
 
-    Code->>LLM: 发送 messages + TOOLS 菜单
-    LLM->>Code: 返回 tool_calls: [read_excel(nrows=50)]
-    Note over Code: json.loads 解析参数
-    Note over Code: TOOL_REGISTRY 查表
-    Note over Code: dispatch_tool 执行 → 拿结果
-    Code->>LLM: role=tool, 喂回工具结果
-    Note over LLM: 分析结果，决定下一步
-    LLM->>Code: 可能再调工具，或直接给答案
-    Note over Code: 循环，直到 LLM 不再调工具
-    Code->>LLM: (最终) 文本回答 → 流式输出
+    C->>L: messages + TOOLS
+    L->>C: tool_calls: [read_excel(nrows=50)]
+    Note over C: 解析参数 → 查表 → 执行
+    C->>L: role=tool, 喂回结果
+    Note over L: 分析，决定下一步
+    L->>C: 最终回答（流式输出）
 ```
 
 ### 界面展示
